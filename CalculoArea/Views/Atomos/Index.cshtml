@@ -1,0 +1,50 @@
+﻿@model CalculoArea.Models.XmlProteinaModel
+
+<h2>Informar nova proteina para base de dados</h2>
+
+@using (Html.BeginForm("Calcular", "Atomos", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group">
+				@Html.LabelFor(model => model.CodProteina, new { @class = "form-label" })
+				@Html.TextBoxFor(model => model.CodProteina, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.CodProteina, "", new { @class = "error" })
+			</div>
+		</div>
+	</div>
+
+	<button type="button" class="btn btn-default btn-cons" onclick="Calcular()">Calcular</button>
+}
+
+
+<script>
+
+	function Calcular()
+	{
+		$("input").prop('disabled', true);
+		$("button").prop('disabled', true);
+		
+		$('.loading').show();
+		
+		$.ajax({
+			type: "POST",
+			url: "Atomos/Calcular",
+			data: { codProteina: $('#CodProteina').val() },
+			dataType: "json",
+			success: function (data) {
+				$("#main").html(data);
+				$('.loading').hide();
+				$("input").prop('disabled', false);
+				$("button").prop('disabled', false);
+			},
+			error: function (data) {
+				$('.loading').hide();
+				$("input").prop('disabled', false);
+				$("button").prop('disabled', false);
+			}
+		})
+	}
+
+</script>
